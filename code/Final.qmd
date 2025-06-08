@@ -3,6 +3,23 @@ title: "Final"
 subtitle: "Eli Dewald"
 date: "May 27, 2025"
 format: html
+  code-links: 
+    - text: GitHub Repository
+    - href: https://github.com/eliasdewald/ENVS-193DS_spring-2025_final
 toc: true
 ---
+
+```{r}
+#| message: false # make messages not show
+#| warning: false # make warnings not show
+
+library(tidyverse) # general use
+library(here) # file organization
+library(MuMIn) # choosing best model
+library(janitor) # cleaning data frames
+library(DHARMa) # running model diagnostics
+
+sst <- read.csv( # read in data
+  here("data", "SST_update2023.csv")) # set file path
+```
 
