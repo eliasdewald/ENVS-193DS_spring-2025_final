@@ -1,0 +1,8 @@
+---
+title: "Final"
+subtitle: "Eli Dewald"
+date: "May 27, 2025"
+format: html
+toc: true
+---
+
