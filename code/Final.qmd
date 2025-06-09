@@ -35,3 +35,44 @@ A Tukey's multiple comparisons of mean test could be used to find Tukey's HSD, w
 We found that there is a [blank] (r = correlation coefficient) correlation between distance from headwater (km) and annual total nitrogen load (kg year-1) (Pearson' R test, t(degrees of freedom) = t-statistic, p = 0.03, α = significance level). 
 
 We found a [blank] (η~2~ = effect size) difference between sources (urban land, atmospheric deposition, fertilizer, wastewater treatment, and grasslands) in nitrogen load (kg year-1) (one-way ANOVA, f(among groups degrees of freedom, within groups degrees of freedom) = f-statistic, p = 0.02, α = significance level). On average, [blank] sources tended to have [blank] nitrogen load than [blank, etc.] (Tukey HSD, 95% CI:[lower bound, upper bound] (kg year-1)) sources. 
+
+# Problem 2. Data visualization
+
+## a. 
+
+```{r}
+#| message: false
+sst_clean <- sst |> # create new object from sst
+  select(date, temp) |> # select columns of interest
+  mutate(date = as_date(date)) |> # make sure date is a date
+  filter(date > as_date("2017-12-31")) |> 
+  # filter to only includes dates from 2018 and after
+  mutate_at(vars(date), list(year, month)) |>  # add month and year column based off of date
+  rename(year = fn1, # rename fn1 column to year
+         month = fn2) |> # rename fn2 column to month
+  # make month have levels 1 through 12
+  group_by(year, month) |> # group by month and year
+  summarize(mean_monthly_sst = mean(temp, na.rm = TRUE)) |> # calculate monthly mean sst
+  mutate(year = as_factor(year), # make sure year is a factor
+         year = fct_relevel(year, # change year factor levels to YYYY format
+            "2018", "2019", "2020", "2021", "2022", "2023")) |> 
+  mutate(month = case_when( # rename values
+    month == "1" ~ "Jan", # change "1" to "Jan"
+    month == "2" ~ "Feb", # change "2" to "Feb"
+    month == "3" ~ "Mar", # change "3" to "Mar"
+    month == "4" ~ "Apr", # change "4" to "Apr"
+    month == "5" ~ "May", # change "5" to "May"
+    month == "6" ~ "Jun", # change "6" to "Jun"
+    month == "7" ~ "Jul", # change "7" to "Jul"
+    month == "8" ~ "Aug", # change "8" to "Aug"
+    month == "9" ~ "Sep", # change "9" to "Sep"
+    month == "10" ~ "Oct", # change "10" to "Oct"
+    month == "11" ~ "Nov", # change "11" to "Nov"
+    month == "12" ~ "Dec", # change "12" to "Dec"
+  )) |> 
+  mutate(month = as_factor(month)) |> 
+  ungroup()
+
+
+```
+
