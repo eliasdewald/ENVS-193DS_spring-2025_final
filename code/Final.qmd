@@ -15,6 +15,7 @@ library(here) # file organization
 library(MuMIn) # choosing best model
 library(janitor) # cleaning data frames
 library(DHARMa) # running model diagnostics
+library(lubridate) # cleaning up dates
 
 sst <- read.csv( # read in data
   here("data", "SST_update2023.csv")) # set file path
@@ -43,16 +44,15 @@ We found a [blank] (η~2~ = effect size) difference between sources (urban land,
 ```{r}
 #| message: false
 sst_clean <- sst |> # create new object from sst
-  select(date, temp) |> # select columns of interest
-  mutate(date = as_date(date)) |> # make sure date is a date
+  mutate(date = as_date(date),
+         year = year (date),
+         month = month(date)) |>  # make sure date is a date
   filter(date > as_date("2017-12-31")) |> 
   # filter to only includes dates from 2018 and after
-  mutate_at(vars(date), list(year, month)) |>  # add month and year column based off of date
-  rename(year = fn1, # rename fn1 column to year
-         month = fn2) |> # rename fn2 column to month
-  # make month have levels 1 through 12
+  select(year, month, temp) |>  # select columns of interest
   group_by(year, month) |> # group by month and year
-  summarize(mean_monthly_sst = mean(temp, na.rm = TRUE)) |> # calculate monthly mean sst
+  summarize(mean_monthly_sst = mean(temp, na.rm = TRUE)) |> 
+  # calculate monthly mean sst
   mutate(year = as_factor(year), # make sure year is a factor
          year = fct_relevel(year, # change year factor levels to YYYY format
             "2018", "2019", "2020", "2021", "2022", "2023")) |> 
@@ -68,11 +68,14 @@ sst_clean <- sst |> # create new object from sst
     month == "9" ~ "Sep", # change "9" to "Sep"
     month == "10" ~ "Oct", # change "10" to "Oct"
     month == "11" ~ "Nov", # change "11" to "Nov"
-    month == "12" ~ "Dec", # change "12" to "Dec"
-  )) |> 
-  mutate(month = as_factor(month)) |> 
-  ungroup()
-
-
+    month == "12" ~ "Dec"), # change "12" to "Dec"
+    month = ordered(month),
+    month = fct_relevel(month,
+            "Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")) |>
+  ungroup() # ungroup data frame
+slice_sample(sst_clean, # slice sst_clean data frame
+             n = 5) # display 5 rows
+str(sst_clean) # display structure of sst_clean data frame
 ```
 
