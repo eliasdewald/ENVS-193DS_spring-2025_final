@@ -79,3 +79,36 @@ slice_sample(sst_clean, # slice sst_clean data frame
 str(sst_clean) # display structure of sst_clean data frame
 ```
 
+## b. 
+
+```{r}
+#| fig-height: 5 # set figure height
+#| fig-width: 8 # set figure width
+
+ggplot(data = sst_clean, # plot with sst_clean data frame
+       aes(x = month, # set x-axis
+           y = mean_monthly_sst, # set y-axis
+           group = year, # group as year
+           color = year)) + # color by  year
+  geom_point() + # add points
+  geom_line(linewidth = 1) + # add lines
+  labs(x = "Month", # label x-axis
+       y = "Mean monthly sea surface temperature (°C)", # label y-axis
+       color = "Year") +  # label legend
+  theme(panel.background = element_rect("white"), # make background white
+        panel.grid = element_blank(), # remove grid
+        legend.position = "inside", # set legend position to inside
+        legend.position.inside = c(0.09, 0.7), # control inside position of legend
+        panel.border = element_rect(color = "black", # add black outline to plot
+                                    fill = NA, # make sure there is no fill within border
+                                    linewidth = 1), # set outline size
+        legend.text = element_text(size = 10)) + # set size of legend
+  scale_color_manual(values = c("2018" = "#56B1F7", "2019" = "#428AC2", "2020" = "#3670A0", "2021" = "#2A5880", "2022" = "#1E4160", "2023" = "#132B43"))
+# set color for each year
+        
+    
+```
+
+
+```
+
