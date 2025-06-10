@@ -146,7 +146,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="c." class="level2">
 <h2 class="anchored" data-anchor-id="c.">c.&nbsp;</h2>
-<p>We found that there is a [blank] (r = correlation coefficient) correlation between distance from headwater (km) and annual total nitrogen load (kg year-1) (Pearson’ R test, t(degrees of freedom) = t-statistic, p = 0.03, α = significance level).</p>
+<p>We found a [blank] (r = correlation coefficient) correlation between distance from headwater (km) and annual total nitrogen load (kg year-1) (Pearson’ R test, t(degrees of freedom) = t-statistic, p = 0.03, α = significance level).</p>
 <p>We found a [blank] (η<sub>2</sub> = effect size) difference between sources (urban land, atmospheric deposition, fertilizer, wastewater treatment, and grasslands) in nitrogen load (kg year-1) (one-way ANOVA, f(among groups degrees of freedom, within groups degrees of freedom) = f-statistic, p = 0.02, α = significance level). On average, [blank] sources tended to have [blank] nitrogen load than [blank, etc.] (Tukey HSD, 95% CI:[lower bound, upper bound] (kg year-1)) sources.</p>
 </section>
 </section>
@@ -192,11 +192,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code># A tibble: 5 × 3
   year  month mean_monthly_sst
   &lt;fct&gt; &lt;ord&gt;            &lt;dbl&gt;
-1 2019  Apr               13.7
-2 2023  Oct               17.4
-3 2023  Dec               16.1
-4 2018  Jul               18.2
-5 2023  Nov               16.8</code></pre>
+1 2018  Jul               18.2
+2 2019  Oct               17.1
+3 2019  Aug               17.0
+4 2019  Jun               15.8
+5 2019  Nov               16.8</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(sst_clean) <span class="co"># display structure of sst_clean data frame</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -210,7 +210,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="b.-1" class="level2">
 <h2 class="anchored" data-anchor-id="b.-1">b.</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> sst_clean, <span class="co"># plot with sst_clean data frame</span></span>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> sst_clean, <span class="co"># plot new object with sst_clean data frame</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> month, <span class="co"># set x-axis</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> mean_monthly_sst, <span class="co"># set y-axis</span></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">group =</span> year, <span class="co"># group as year</span></span>
@@ -228,7 +228,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">fill =</span> <span class="cn">NA</span>, <span class="co"># make sure there is no fill within border</span></span>
 <span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">linewidth =</span> <span class="dv">1</span>), <span class="co"># set outline size</span></span>
 <span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>)) <span class="sc">+</span> <span class="co"># set size of legend</span></span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"2018"</span> <span class="ot">=</span> <span class="st">"#56B1F7"</span>, <span class="st">"2019"</span> <span class="ot">=</span> <span class="st">"#428AC2"</span>, <span class="st">"2020"</span> <span class="ot">=</span> <span class="st">"#3670A0"</span>, <span class="st">"2021"</span> <span class="ot">=</span> <span class="st">"#2A5880"</span>, <span class="st">"2022"</span> <span class="ot">=</span> <span class="st">"#1E4160"</span>, <span class="st">"2023"</span> <span class="ot">=</span> <span class="st">"#132B43"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"2018"</span> <span class="ot">=</span> <span class="st">"#56B1F7"</span>, <span class="st">"2019"</span> <span class="ot">=</span> <span class="st">"#428AC2"</span>, <span class="st">"2020"</span> <span class="ot">=</span> <span class="st">"#3670A0"</span>, <span class="st">"2021"</span> <span class="ot">=</span> <span class="st">"#2A5880"</span>, <span class="st">"2022"</span> <span class="ot">=</span> <span class="st">"#1E4160"</span>, <span class="st">"2023"</span> <span class="ot">=</span> <span class="st">"#132B43"</span>))</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a><span class="co"># set color for each year</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>plot <span class="co"># display plot</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -236,9 +239,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set color for each year</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>```</p>
 </section>
 </section>
 
