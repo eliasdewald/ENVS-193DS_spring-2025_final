@@ -16,7 +16,7 @@ library(MuMIn) # choosing best model
 library(janitor) # cleaning data frames
 library(DHARMa) # running model diagnostics
 library(lubridate) # cleaning up dates
-library(ggeffects) # additional ggplot features
+library(ggeffects) # model predictions
 
 sst <- read.csv( # read in data
   here("data", "SST_update2023.csv")) # set file path
@@ -139,19 +139,22 @@ The seasons mentioned in the study are two different breeding seasons where Swif
 ## e. 
 
 ```{r}
+nest_boxes_clean <- nest_boxes |>  # make new data frame from nest_boxes data frame
+  mutate(season = as_factor(season), # make sure season is a factor
+         season = fct_relevel(season, "2016", "2019")) # change factor levels
 model0 <- glm(sp ~ 1, # creating new object of linear model with no predictors
-  data = nest_boxes, # set data frame
+  data = nest_boxes_clean, # set data frame
   family = "binomial") # set distribution
 model1 <- glm(sp ~ season + edge_distance, 
-             # creating new object of linear model with both predictors
-  data = nest_boxes, # set data frame
+            # creating new object of linear model with both predictors
+  data = nest_boxes_clean, # set data frame
   family = "binomial") # set distribution
 model2 <- glm(sp ~ season, # creating new object of linear model with season as predictor
-  data = nest_boxes, # set data frame
+  data = nest_boxes_clean, # set data frame
   family = "binomial") # set distribution
 model3 <- glm(sp ~ edge_distance, 
-            # creating new object of linear model with distance to forest edge as predictor
-  data = nest_boxes, # set data frame
+          # creating new object of linear model with distance to forest edge as predictor
+  data = nest_boxes_clean, # set data frame
   family = "binomial") # set distribution
 ```
 
@@ -175,18 +178,45 @@ The best model, as determined by Akaike’s Information Criterion (AIC), is the 
 ## h
 
 ```{r}
-nest_boxes_clean <- nest_boxes |>  # make new data frame from nest_boxes data frame
-  mutate(season = as_factor(season), # make sure season is a factor
-         season = fct_relevel(season, "2016", "2018")) # change factor levels
-plot2 <- ggplot(data = nest_boxes, # make new object by plotting nest_boxes
+#| fig-height: 5 # set figure height
+#| fig-width: 7 # set figure width
+model1_pred <- ggpredict(model1, # generate predictions based off of model1
+                         terms = c("edge_distance [0:1100 by = 1]", "season")) 
+
+ggplot(nest_boxes_clean, # plot with nest_boxes_clean data frame
        aes(x = edge_distance, # set x-axis
            y = sp, # set y-axis
-           color = season)) + # color by season
-  geom_point(width = 0.1, # jitter underlying data as points and set width
-              height = 0, # set height
-              shape = 21, # make points open circles
-              alpha = 0.6)  # make points transparent
+           group = group, # group by season
+           color = group, # color by season
+           fill = group)) + # fill by season
+  geom_ribbon(data = model1_pred, 
+              # plot confidence interval ribbons based off of model predictions
+              aes(x = x, # set x axis
+                  y = predicted, # set y axis
+                  ymin = conf.low, # set upper bound of confidence interval
+                  ymax = conf.high, # set lower bound of confidence interval
+                  color = NULL), # remove ribbon outline
+              alpha = 0.2) + # make ribbons transparent
+  geom_line(data = model1_pred, # plot line based off of model predictions
+            aes(x = x, # set x axis
+                y = predicted)) + # set y axis
+  geom_point(data = nest_boxes_clean, # plot underlying data
+             aes(x = edge_distance, # set x axis
+                 y = sp, # set y axis
+                 group = season, # group by season
+                 color = season, # color by season
+                 fill = season), # fill by season
+             size = 2, # set size 
+             shape = 21, # set shape
+             alpha = 0.4) + # make points transparent
+  theme_classic() + # change theme to remove gridlines
+  scale_fill_manual(values = c("cadetblue3", "cornflowerblue")) + # set fill colors
+  scale_color_manual(values = c("cadetblue3", "cornflowerblue")) + # set outline colors
+  labs(x = "Distance to forest edge (m)", # set x axis label
+       y = "Probability of box occupancy", # set y axis label
+       color = "Season", # rename legend
+       fill = "Season") # rename legend
   
-plot2  
 ```
+
 
