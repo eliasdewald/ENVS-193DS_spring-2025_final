@@ -16,6 +16,7 @@ library(MuMIn) # choosing best model
 library(janitor) # cleaning data frames
 library(DHARMa) # running model diagnostics
 library(lubridate) # cleaning up dates
+library(ggeffects) # additional ggplot features
 
 sst <- read.csv( # read in data
   here("data", "SST_update2023.csv")) # set file path
@@ -138,25 +139,54 @@ The seasons mentioned in the study are two different breeding seasons where Swif
 ## e. 
 
 ```{r}
-model0 <- lm(sp ~ 1, # creating new object of linear model with no predictors
-  data = nest_boxes) # set data frame
-model1 <- lm(sp ~ season + edge_distance, 
+model0 <- glm(sp ~ 1, # creating new object of linear model with no predictors
+  data = nest_boxes, # set data frame
+  family = "binomial") # set distribution
+model1 <- glm(sp ~ season + edge_distance, 
              # creating new object of linear model with both predictors
-  data = nest_boxes) # set data frame
-model2 <- lm(sp ~ season, # creating new object of linear model with season as predictor
-  data = nest_boxes) # set data frame
-model3 <- lm(sp ~ edge_distance, 
+  data = nest_boxes, # set data frame
+  family = "binomial") # set distribution
+model2 <- glm(sp ~ season, # creating new object of linear model with season as predictor
+  data = nest_boxes, # set data frame
+  family = "binomial") # set distribution
+model3 <- glm(sp ~ edge_distance, 
             # creating new object of linear model with distance to forest edge as predictor
-  data = nest_boxes) # set data frame
+  data = nest_boxes, # set data frame
+  family = "binomial") # set distribution
 ```
 
 ## f. 
 
 ```{r}
-par(mfrow = c(2,2)) # run model diagnostics
-plot(model0) # plot model0 diagnostics
-plot(model1) # plot model1 diagnostics
-plot(model2) # plot model2 diagnostics
-plot(model3) # plot model3 diagnostics
+plot(simulateResiduals(model0)) # plot model0 diagnostics
+plot(simulateResiduals(model1)) # plot model1 diagnostics
+plot(simulateResiduals(model2)) # plot model2 diagnostics
+plot(simulateResiduals(model3)) # plot model3 diagnostics
+```
+
+## g.
+
+```{r}
+AICc(model0, model1, model2, model3) |> # check for best model using AIC
+  arrange(AICc) # display arranged output
+```
+The best model, as determined by Akaike’s Information Criterion (AIC), is the model where Swift Parrot nest box presence is predicted by season and distance to forest edge.
+
+## h
+
+```{r}
+nest_boxes_clean <- nest_boxes |>  # make new data frame from nest_boxes data frame
+  mutate(season = as_factor(season), # make sure season is a factor
+         season = fct_relevel(season, "2016", "2018")) # change factor levels
+plot2 <- ggplot(data = nest_boxes, # make new object by plotting nest_boxes
+       aes(x = edge_distance, # set x-axis
+           y = sp, # set y-axis
+           color = season)) + # color by season
+  geom_point(width = 0.1, # jitter underlying data as points and set width
+              height = 0, # set height
+              shape = 21, # make points open circles
+              alpha = 0.6)  # make points transparent
+  
+plot2  
 ```
 
