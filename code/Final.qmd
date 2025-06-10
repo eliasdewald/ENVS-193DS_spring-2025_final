@@ -19,9 +19,11 @@ library(lubridate) # cleaning up dates
 
 sst <- read.csv( # read in data
   here("data", "SST_update2023.csv")) # set file path
+nest_boxes <- read.csv( # read in data
+  here("data", "occdist.csv")) # set file path
 ```
 
-# Problem 1. Research Writing 
+# Problem 1. Research writing 
 
 ## a. 
 
@@ -109,4 +111,24 @@ plot <- ggplot(data = sst_clean, # plot new object with sst_clean data frame
 plot # display plot
 ```
 
+# Problem 3. Data analysis
+
+## a. 
+
+The 1s and 0s denote whether the species named in the column title is or isn't present in the nest box. 1 means that the species is present, and 0 means that specific species is not present. 
+
+## b. 
+
+Swift Parrots differ from Common Starling and Tree Martin due to being at high risk of extinction. Consequently, nest boxes have been built to support Swift Parrots, but the other study species are competitors which can exploit the nest boxes.
+
+## c. 
+
+The seasons mentioned in the study are two different breeding seasons where Swift Parrots were actively breeding at the study. Nest boxes were deployed during the 2016 breeding season and had been left there for a few years by the 2019 breeding season.
+
+## d. 
+
+
+```{r}
+
+```
 
