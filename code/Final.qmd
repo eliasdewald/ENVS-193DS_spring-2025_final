@@ -20,7 +20,8 @@ library(lubridate) # cleaning up dates
 sst <- read.csv( # read in data
   here("data", "SST_update2023.csv")) # set file path
 nest_boxes <- read.csv( # read in data
-  here("data", "occdist.csv")) # set file path
+  here("data", "occdist.csv")) |> # set file path
+  clean_names() # clean column names
 ```
 
 # Problem 1. Research writing 
@@ -127,8 +128,35 @@ The seasons mentioned in the study are two different breeding seasons where Swif
 
 ## d. 
 
+| Model number | Season | Distance to forest edge | Description                         |
+|:------------:|:------:|:-----------------------:|:------------------------------------|  
+| 0            |        |                         | no predictors (null model)          |
+| 1            |    X   |            X            | both predictors (saturated model)   |
+| 2            |    X   |                         | season only                         |
+| 3            |        |            X            | distance to forest edge only        | 
+
+## e. 
 
 ```{r}
+model0 <- lm(sp ~ 1, # creating new object of linear model with no predictors
+  data = nest_boxes) # set data frame
+model1 <- lm(sp ~ season + edge_distance, 
+             # creating new object of linear model with both predictors
+  data = nest_boxes) # set data frame
+model2 <- lm(sp ~ season, # creating new object of linear model with season as predictor
+  data = nest_boxes) # set data frame
+model3 <- lm(sp ~ edge_distance, 
+            # creating new object of linear model with distance to forest edge as predictor
+  data = nest_boxes) # set data frame
+```
 
+## f. 
+
+```{r}
+par(mfrow = c(2,2)) # run model diagnostics
+plot(model0) # plot model0 diagnostics
+plot(model1) # plot model1 diagnostics
+plot(model2) # plot model2 diagnostics
+plot(model3) # plot model3 diagnostics
 ```
 
