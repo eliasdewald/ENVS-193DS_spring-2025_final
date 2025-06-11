@@ -182,6 +182,7 @@ The best model, as determined by Akaike’s Information Criterion (AIC), is the 
 #| fig-width: 7 # set figure width
 model1_pred <- ggpredict(model1, # generate predictions based off of model1
                          terms = c("edge_distance [0:1100 by = 1]", "season")) 
+                        # set variables, range, and interval for prediction
 
 ggplot(nest_boxes_clean, # plot with nest_boxes_clean data frame
        aes(x = edge_distance, # set x-axis
@@ -219,4 +220,22 @@ ggplot(nest_boxes_clean, # plot with nest_boxes_clean data frame
   
 ```
 
+## i. 
 
+**Figure 3.** Probability of nest box occupancy by Swift Parrots tends to decrease with distance to forest edge and tends to be higher in 2016 than and 2019. Data from ‘occdist.csv’ (Stojanovic et al., 2021). Transparent shaded points represent observations of Swift Parrots occupying a nest box (0: absent, 1: present) during the 2016 (n = 104) and 2019 (n = 123) breeding seasons. Lines represent predicted values and ribbons represent the 95% confidence interval around predicted values based off a generalized linear model where Swift Parrot nest box presence is predicted by season and distance to forest edge. Color represents breeding season (Light blue: 2016, Dark blue: 2019).
+
+## j. 
+
+```{r}
+
+ggpredict(model1, # generate predictions based off of model1
+          terms = c("season [2016, 2019]"),
+          condition = c(edge_distance = "0"))
+ggpredict(model1, # generate predictions based off of model1
+          terms = c("season [2016, 2019]"),
+          condition = c(edge_distance = "900"))
+```
+
+## k. 
+
+Distance to forest edge and breeding season influence the presence of Swift Parrots within nest boxes. Swift Parrots tend to occupy nest boxes more often when the distance to the forest edge is low and the breeding season is 2016 (Figure 3). At a distance of 0 meters to the forest edge, there is a higher likelihood of occupancy in both 2016 (p = 0.48 (95% CI [0.33, 0.64])) and 2019 (p = 0.30 (95% CI [0.18, 0.44])), than at a distance of 900 meters in 2016 (p = 0.12 (95% CI [0.06, 0.24])) and 2019 (p = 0.06 (95% CI [0.03, 0.13])). This may be due to Swift Parrot behavior and the use of nest boxes far from the forest by Tree Martins, a competitor species. During the 2016 breeding season, there is a higher likelihood of Swift Parrots being present within nest boxes at a 0 meter distance to forest edge (p = 0.48 (95% CI [0.33, 0.64])) than in 2019 (p = 0.30 (95% CI [0.18, 0.44])), as well as a higher probability at a 900 meter distance to forest edge that same year (p = 0.12 (95% CI [0.06, 0.24])) than 2019 (p = 0.06 (95% CI [0.03, 0.13])). This trend may be due to the possibility of competitor species benefiting from established nest boxes more than Swift Parrots. 
